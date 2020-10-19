@@ -1,0 +1,27 @@
+# Example Home-Assistant yaml configuration
+
+sensor:
+  - platform: mqtt
+    name: "BME280-Outside"
+    state_topic: "stats/bme280-outside/stats"
+    value_template: "{{ value_json.temperature }}"
+    json_attributes_topic: "stats/bme280-outside/stats"
+    json_attributes_template: "{{ value_json | tojson }}"
+    force_update: true
+
+  - platform: template
+    sensors:
+      bme280_outside_temperature:
+        value_template: '{{ states.sensor.bme280_outside.attributes.temperature|float }}'
+        friendly_name: 'Outside temperature'
+        unit_of_measurement: 'C'
+
+      bme280_outside_pressure:
+        value_template: '{{ states.sensor.bme280_outside.attributes.pressure|int }}'
+        friendly_name: 'Outside pressure'
+        unit_of_measurement: 'hPa'
+
+      bme280_outside_humidity:
+        value_template: '{{ states.sensor.bme280_outside.attributes.humidity|int }}'
+        friendly_name: 'Outside humidity'
+        unit_of_measurement: '%'
